@@ -1,0 +1,6 @@
+/config/state_sheets.json
+/secrets/token.json
+__pycache__/
+venv/
+.idea/
+.env
