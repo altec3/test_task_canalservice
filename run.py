@@ -1,3 +1,4 @@
+import os
 import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -7,7 +8,8 @@ from services.db import DB
 from config.settings import GS_POLLING_INTERVAL, CBR_POLLING_INTERVAL, ROWS_SHIFT
 
 if __name__ == '__main__':
-    scheduler = AsyncIOScheduler()
+    loop = asyncio.new_event_loop()
+    scheduler = AsyncIOScheduler(event_loop=loop)
     sheet = GSheets()
     cbr = CBR()
     with DB() as db:
@@ -30,6 +32,7 @@ if __name__ == '__main__':
                 row.extend((0, index+ROWS_SHIFT+1))
 
             db_.update(rows)
+            db_.update_price_rub(cbr.fetch_currency_rate())
             print('[sheet_check_job] выполнено!')
 
     async def currency_rate_check_job():
@@ -41,10 +44,10 @@ if __name__ == '__main__':
     scheduler.add_job(sheet_check_job, 'interval', minutes=GS_POLLING_INTERVAL)
     scheduler.start()
 
-    print('Press Ctrl+C to exit\n')
+    print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
 
     try:
-        asyncio.get_event_loop().run_forever()
+        loop.run_forever()
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
-        asyncio.get_event_loop().stop()
+        loop.stop()
