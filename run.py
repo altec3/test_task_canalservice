@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     async def currency_rate_check_job():
         with DB() as db_:
-            db_.update_cost_rub(cbr.fetch_currency_rate())
+            db_.update_price_rub(cbr.fetch_currency_rate())
             print('[currency_rate_check_job] курс USD/RUB успешно обновлен:', cbr.currency_rate)
 
     scheduler.add_job(currency_rate_check_job, 'interval', hours=CBR_POLLING_INTERVAL)
