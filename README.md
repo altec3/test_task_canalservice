@@ -1,5 +1,6 @@
 ### Тестовое задание
-*Стек: python:3.10, Postgres:12.4*
+*Стек: python:3.10, Postgres:12.4*  
+*Среда разработки: PyCharm*
 ####
 
 ### Для проверки задания:
@@ -12,13 +13,7 @@
 2. Ключ, полученный в результате регистрации сервисного аккаунта, сохранить как *token.json* в директории [secrets](./secrets).
 3. При необходимости, в список [EMAIL_ADDRESSES](./config/settings.py) добавить email пользователей, которым следует открыть доступ к облаку.
 4. Рядом с файлом *docker-compose.yaml* положить файл *.env* с параметрами для подключения к базе данных (см. файл [.env.example](.env.example)):
-5. Установить зависимости
-```python
-pip install poetry
-poetry install
-```
-6. Собрать и запустить контейнеры со скриптом и базой данных (БД).
-
+5. Собрать и запустить контейнеры со скриптом и базой данных (БД):
 ```python
 docker-compose up --build -d
 ```
@@ -30,4 +25,37 @@ docker-compose ps
 Посмотреть статус работы скрипта:
 ```python
 docker-compose logs script
+```
+Остановить контейнеры:
+```python
+docker-compose down
+```
+#### Для просмотра изменений в БД (IDE PyCharm)
+1. [Настроить](https://www.jetbrains.com/help/pycharm/postgresql.html) подключение к базе.
+2. Открыть необходимую таблицу базы для просмотра: *View -> Tool Windows -> Database*.
+
+#### Ручной запуск
+1. Выполнить пункты 1 - 4 выше
+2. Создать виртуальное окружение:
+```python
+python -m venv venv
+./venv/Scripts/Activate.ps1 # Windows PowerShell
+venv\Scripts\activate.bat   # Windows CMD
+source venv/bin/activate    # Linux, MacOS
+```
+3. Установить зависимости:
+```python
+pip install poetry
+poetry install
+```
+4. Запустить образ с PostgreSQL с учетом параметров в .env-файле:
+```python
+docker run --name psql -e POSTGRES_DB=postgres -e  POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:12.4-alpine
+```
+где:  
+POSTGRES_DB - имя БД (DB_NAME),  
+POSTGRES_PASSWORD - пароль для доступа к БД (DB_PASSWORD).
+5. Запустить скрипт:
+```python
+python run.py
 ```
