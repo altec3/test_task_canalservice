@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres:12.4-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    ports:
+    - "5432:5432"
+
+  script:
+    build:
+      context: .
+      target: image
+    env_file:
+      - ./.env
+    environment:
+      DB_HOST: db
+    volumes:
+      - ./secrets:/script/secrets:ro
+      - ./config:/script/config
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["python3", "run.py"]
+
+volumes:
+  psql_data:
+    driver: local

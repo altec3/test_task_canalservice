@@ -1,32 +1,24 @@
 import os.path
-import json
 from pathlib import Path
+from envparse import env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRETS_DIR = BASE_DIR.resolve().joinpath('secrets')
 CONFIG_DIR = BASE_DIR.resolve().joinpath('config')
+ENV_PATH = BASE_DIR.resolve().joinpath('.env')
 
+if ENV_PATH.exists() and ENV_PATH.is_file():
+    env.read_envfile(ENV_PATH)
 
 # DB service settings
 
-#: Файл с параметрами для доступа к базе данных (БД)
-DB_SETTINGS_FILE = 'db.json'
-DB_SETTINGS_FILE_PATH = SECRETS_DIR.joinpath(DB_SETTINGS_FILE)
-
-if not DB_SETTINGS_FILE_PATH.exists():
-    print(f'DB_FILE_PATH: file not found in {os.path.basename(SECRETS_DIR)} directory')
-    exit(1)
-
-with open(DB_SETTINGS_FILE_PATH, 'r', encoding='utf-8') as config:
-    db_config: dict = json.load(config)
-
 try:
-    DB_NAME = db_config['DB_NAME'],
-    DB_USER = db_config['DB_USER'],
-    DB_PASSWORD = db_config['DB_PASSWORD'],
-    DB_HOST = db_config['DB_HOST'],
+    DB_NAME = env('DB_NAME'),
+    DB_USER = env('DB_USER'),
+    DB_PASSWORD = env('DB_PASSWORD'),
+    DB_HOST = env('DB_HOST'),
 except Exception as error:
-    print('DB: config file structure error', error)
+    print('DB: environment variables error', error)
     exit(1)
 
 #: Имя таблицы в базе данных для хранения данных из облака (из GSheet-таблицы)
