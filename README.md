@@ -10,7 +10,7 @@
 
 ---
 1. Создать сервисный аккаунт [Google](https://developers.google.com/identity/protocols/oauth2/service-account?hl=ru).
-2. Ключ, полученный в результате регистрации сервисного аккаунта, сохранить как *token.json* в директории [secrets](./secrets).
+2. Ключ, полученный в результате регистрации сервисного аккаунта, сохранить как *token.json* в директории [./secrets](./secrets).
 3. При необходимости, в список [EMAIL_ADDRESSES](./config/settings.py) добавить email пользователей, которым следует открыть доступ к облаку.
 4. Рядом с файлом *docker-compose.yaml* положить файл *.env* с параметрами для подключения к базе данных (см. файл [.env.example](.env.example)):
 5. Собрать и запустить контейнеры со скриптом и базой данных (БД):
@@ -54,7 +54,7 @@ docker run --name psql -e POSTGRES_DB=postgres -e  POSTGRES_PASSWORD=postgres -p
 ```
 где:  
 POSTGRES_DB - имя БД (DB_NAME),  
-POSTGRES_PASSWORD - пароль для доступа к БД (DB_PASSWORD).
+POSTGRES_PASSWORD - пароль для доступа к БД (DB_PASSWORD).  
 5. Запустить скрипт:
 ```python
 python run.py
