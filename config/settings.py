@@ -10,6 +10,7 @@ ENV_PATH = BASE_DIR.resolve().joinpath('.env')
 if ENV_PATH.exists() and ENV_PATH.is_file():
     env.read_envfile(ENV_PATH)
 
+
 # DB service settings
 
 try:
@@ -80,14 +81,11 @@ EMAIL_ADDRESSES = [
 #: Название листа, на который будут скопированы данные из таблицы-источника
 NEW_SHEET_NAME = 'New sheet'
 
+
 # CBR service settings
 
+#: Валюта, по отношению к которой необходимо вычислять курс
 VALUTE_CHAR_CODE = 'USD'
-VALUTE_INFO_OPEN_TAG = '<CharCode>'
-VALUTE_INFO_VALUE_OPEN_TAG = '<Value>'
-VALUTE_INFO_VALUE_CLOSE_TAG = '</Value>'
-VALUTE_INFO_NOMINAL_OPEN_TAG = '<Nominal>'
-VALUTE_INFO_NOMINAL_CLOSE_TAG = '</Nominal>'
 
 
 # Polling settings
